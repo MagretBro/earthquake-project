@@ -17,13 +17,14 @@ SOURCE = 'earthquake'
 # S3
 ACCESS_KEY = Variable.get('access_key')
 SECRET_KEY = Variable.get('secret_key')
+logging.info(f"ACCESS_KEY = {ACCESS_KEY}, SECRET_KEY = {SECRET_KEY}")
 
 LONG_DESCRIPTION = """This DAG calculates the average earthquake magnitude for each day."""
 SHORT_DESCRIPTION = """This DAG calculates the average earthquake magnitude for each day."""
 
 args = {
     'owner': OWNER,
-    'start_date': pendulum.datetime(2026, 5, 1, tz="UTC"),
+    'start_date': pendulum.datetime(2026, 8, 18, tz="UTC"),
     'catchup': True,
     'retries': 3,
     'retry_delay': pendulum.duration(hours=1),
@@ -38,7 +39,7 @@ def get_dates(**context) -> tuple[str, str]:
 
 def get_and_transfer_api_data_to_s3(**context):
     """"""
-
+    logging.info(f"ACCESS_KEY = '{ACCESS_KEY}', SECRET_KEY = '{SECRET_KEY}'")
     start_date, end_date = get_dates(**context)
     logging.info(f"💻 Start load for dates: {start_date}/{end_date}")
     con = duckdb.connect()
