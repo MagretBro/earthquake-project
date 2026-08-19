@@ -2,7 +2,7 @@ import pendulum
 from airflow import DAG
 from airflow.operators.empty import EmptyOperator
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
-from airflow.sensors.externsl_task import ExternalTaskSensor
+from airflow.sensors.external_task import ExternalTaskSensor
 
 OWNER = 'magret_bro'
 DAG_ID = 'fct_avg_day_earthquake'
@@ -28,12 +28,12 @@ args = {
 
 with DAG (
     dag_id=DAG_ID,
-    shedule_interval='@daily',
+    schedule_interval='@daily',
     default_args=args,
     description=SHORT_DESCRIPTION,
     tags=['dm', 'pg'],
     concurrency=1,
-    max_active_task=1,
+    max_active_tasks=1,
     max_active_runs=1,
 ) as dag:
     dag.doc_md = LONG_DESCRIPTION
@@ -79,7 +79,7 @@ with DAG (
 
     drop_from_target_table = SQLExecuteQueryOperator(
         task_id='drop_from_target_table',
-        conn_in=PG_CONNECT,
+        conn_id=PG_CONNECT,
         autocommit=True,
         sql=f"""DELETE FROM {SCHEMA}.{TARGET_TABLE} 
         WHERE date in (

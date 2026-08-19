@@ -23,7 +23,7 @@ SHORT_DESCRIPTION = """This DAG calculates the average earthquake magnitude for 
 
 args = {
     'owner': OWNER,
-    'start_date': pendulum.datetime(2023, 1, 1, tz="UTC"),
+    'start_date': pendulum.datetime(2026, 5, 1, tz="UTC"),
     'catchup': True,
     'retries': 3,
     'retry_delay': pendulum.duration(hours=1),
