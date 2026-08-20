@@ -15,8 +15,10 @@ LAYER = 'raw'
 SOURCE = 'earthquake'
 
 # S3
-ACCESS_KEY = Variable.get('access_key')
-SECRET_KEY = Variable.get('secret_key')
+# ACCESS_KEY = Variable.get('access_key')
+# SECRET_KEY = Variable.get('secret_key')
+ACCESS_KEY = Variable.get('access_key2')
+SECRET_KEY = Variable.get('secret_key2')
 logging.info(f"ACCESS_KEY = {ACCESS_KEY}, SECRET_KEY = {SECRET_KEY}")
 
 LONG_DESCRIPTION = """This DAG calculates the average earthquake magnitude for each day."""
@@ -24,7 +26,9 @@ SHORT_DESCRIPTION = """This DAG calculates the average earthquake magnitude for 
 
 args = {
     'owner': OWNER,
-    'start_date': pendulum.datetime(2026, 8, 18, tz="UTC"),
+    #'start_date': pendulum.datetime(2026, 8, 18, tz="UTC"),
+    "start_date": pendulum.datetime(2026, 8, 15, tz="Europe/Moscow"),
+    #'catchup': False,
     'catchup': True,
     'retries': 3,
     'retry_delay': pendulum.duration(hours=1),
@@ -61,7 +65,7 @@ def get_and_transfer_api_data_to_s3(**context):
                 *
             FROM
                 read_csv_auto('https://earthquake.usgs.gov/fdsnws/event/1/query?format=csv&starttime={start_date}&endtime={end_date}') AS res
-        ) TO 's3://prod/{LAYER}/{SOURCE}/{start_date}/{start_date}_00-00-00.gz.parquet';
+        ) TO 's3://prod2/{LAYER}/{SOURCE}/{start_date}/{start_date}_00-00-00.gz.parquet';
 
         """,
     )

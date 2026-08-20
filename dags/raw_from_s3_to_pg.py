@@ -19,8 +19,8 @@ SCHEMA = 'ods'
 TARGET_TABLE = 'fct_earthquake'
 
 # S3
-ACCESS_KEY = Variable.get('access_key')
-SECRET_KEY = Variable.get('secret_key')
+ACCESS_KEY = Variable.get('access_key2')
+SECRET_KEY = Variable.get('secret_key2')
 
 # DuckDB
 PASSWORD = Variable.get('pg_password')
@@ -33,7 +33,9 @@ SHORT_DESCRIPTION = 'SHORT DESCRIPTION'
 
 args = {
     'owner': OWNER,
-    'start_date': pendulum.datetime(2026, 7, 1, tz='Europe/Moscow'),
+    #'start_date': pendulum.datetime(2026, 8, 18, tz="UTC"),
+    "start_date": pendulum.datetime(2026, 8, 15, tz="Europe/Moscow"),
+    #'catchup': False,
     'catchup': True,
     'retries': 3,
     'retry_delay': pendulum.duration(hours=1),
@@ -125,7 +127,7 @@ def get_and_transfer_raw_data_to_ods_pg(**context):
             status,
             locationSource AS location_source,
             magSource AS mag_source
-        FROM 's3://prod/{LAYER}/{SOURCE}/{start_date}/{start_date}_00-00-00.gz.parquet';
+        FROM 's3://prod2/{LAYER}/{SOURCE}/{start_date}/{start_date}_00-00-00.gz.parquet';
         ''',
     )
 
@@ -154,8 +156,8 @@ with DAG(
         external_dag_id='raw_from_api_to_s3',
         allowed_states=['success'],
         mode='reschedule',
-        timeout=360000,  # длительность работы сенсора
-        poke_interval=60,  # частота проверки
+        timeout=600,  # длительность работы сенсора
+        poke_interval=160,  # частота проверки
     )
 
     get_and_transfer_raw_data_to_ods_pg = PythonOperator(

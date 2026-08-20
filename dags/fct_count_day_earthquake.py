@@ -25,7 +25,7 @@ SHORT_DESCRIPTION = 'SHORT DESCRIPTION'
 
 args = {
     'owner': OWNER,
-    'start_date': pendulum.datetime(2026, 7, 1, tz='Europe/Moscow'),
+    'start_date': pendulum.datetime(2026, 8, 18, tz='UTC'),
     'catchup': True,
     'retries': 3,
     'retry_delay': pendulum.duration(hours=1),
